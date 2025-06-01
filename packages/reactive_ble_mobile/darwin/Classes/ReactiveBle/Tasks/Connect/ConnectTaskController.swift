@@ -17,7 +17,14 @@ struct ConnectTaskController: PeripheralTaskController {
             return task
         }
 
-        centralManager.connect(peripheral)
+        centralManager.connect(
+    peripheral,
+    options: [
+        CBConnectPeripheralOptionNotifyOnDisconnectionKey: true,
+        CBConnectPeripheralOptionNotifyOnConnectionKey: true,
+        CBConnectPeripheralOptionNotifyOnNotificationKey: true
+    ]
+)
 
         return task.with(state: task.state.processing(.connecting))
     }

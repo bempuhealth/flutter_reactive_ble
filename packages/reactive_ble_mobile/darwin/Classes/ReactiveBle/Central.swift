@@ -123,7 +123,11 @@ final class Central {
         )
         self.centralManager = CBCentralManager(
             delegate: centralManagerDelegate,
-            queue: nil
+            queue: nil,
+            options: [
+        CBCentralManagerOptionRestoreIdentifierKey: "ReactiveBleRestoreId",
+        CBCentralManagerOptionShowPowerAlertKey: true
+    ]
         )
     }
 
