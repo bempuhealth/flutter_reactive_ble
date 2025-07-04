@@ -7,6 +7,7 @@ enum ConnectionChange {
 }
 
 final class CentralManagerDelegate: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
+    private let methodChannel: FlutterMethodChannel?
 
     typealias StateChangeHandler = (CBManagerState) -> Void
     typealias DiscoveryHandler = (CBPeripheral, AdvertisementData, RSSI) -> Void
@@ -17,10 +18,12 @@ final class CentralManagerDelegate: NSObject, CBCentralManagerDelegate, CBPeriph
     private let onConnectionChange: ConnectionChangeHandler
 
     init(
+        methodChannel: FlutterMethodChannel?,
         onStateChange: @escaping StateChangeHandler,
         onDiscovery: @escaping DiscoveryHandler,
         onConnectionChange: @escaping ConnectionChangeHandler
     ) {
+        self.methodChannel = methodChannel
         self.onStateChange = onStateChange
         self.onDiscovery = onDiscovery
         self.onConnectionChange = onConnectionChange
@@ -50,23 +53,27 @@ final class CentralManagerDelegate: NSObject, CBCentralManagerDelegate, CBPeriph
     func centralManager(_ central: CBCentralManager, willRestoreState dict: [String : Any]) {
         print("BLE restoration: willRestoreState called")
 
-        // 1. Get restored peripherals
         if let peripherals = dict[CBCentralManagerRestoredStatePeripheralsKey] as? [CBPeripheral] {
             for peripheral in peripherals {
                 peripheral.delegate = self
-                // Optionally, reconnect or resubscribe if needed
-                // central.connect(peripheral, options: nil)
+                if peripheral.state == .disconnected {
+                    central.connect(peripheral, options: [
+                        CBConnectPeripheralOptionNotifyOnDisconnectionKey: true,
+                        CBConnectPeripheralOptionNotifyOnConnectionKey: true,
+                        CBConnectPeripheralOptionNotifyOnNotificationKey: true
+                    ])
+                }
+                // Rediscover services/characteristics if needed
+                // You may need to call into your Central instance here, e.g.:
+                // centralInstance.discoverServicesWithCharacteristics(for: peripheral, ...)
             }
         }
 
-        // 2. Restore subscriptions to characteristics (if needed)
         if let services = dict[CBCentralManagerRestoredStateScanServicesKey] as? [CBUUID] {
             central.scanForPeripherals(withServices: services, options: nil)
         }
 
-        // 3. Optionally, notify Dart side via MethodChannel
-        // To notify Dart, you need to pass a reference to a FlutterMethodChannel or registrar into this class.
-        // Example:
-        // methodChannel?.invokeMethod("onBleRestored", arguments: nil)
+        // Optionally notify Dart via MethodChannel
+        methodChannel?.invokeMethod("onBleRestored", arguments: nil)
     }
 }

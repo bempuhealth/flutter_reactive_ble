@@ -63,9 +63,19 @@ final class Central {
 
                 switch change {
                 case .connected:
-                    break
+                    // Re-discover and re-subscribe here
+                    peripheral.delegate = central.peripheralDelegate
+                    // You may want to keep track of what to rediscover/resubscribe
+                    // central.discoverServicesWithCharacteristics(...)
                 case .failedToConnect(let error), .disconnected(let error):
                     central.eject(peripheral, error: error ?? PluginError.connectionLost)
+                    if peripheral.state == .disconnected {
+                        central.centralManager.connect(peripheral, options: [
+                            CBConnectPeripheralOptionNotifyOnDisconnectionKey: true,
+                            CBConnectPeripheralOptionNotifyOnConnectionKey: true,
+                            CBConnectPeripheralOptionNotifyOnNotificationKey: true
+                        ])
+                    }
                 }
 
                 onConnectionChange(central, peripheral, change)

@@ -3,8 +3,13 @@ import CoreBluetooth
 
 public class SwiftReactiveBlePlugin: NSObject, FlutterPlugin {
 
+    private var methodChannel: FlutterMethodChannel?
+
     public static func register(with registrar: FlutterPluginRegistrar) {
-        let plugin = SwiftReactiveBlePlugin()
+        let channel = FlutterMethodChannel(name: "flutter_reactive_ble/methods", binaryMessenger: registrar.messenger())
+        let instance = ReactiveBlePlugin()
+        methodChannel = channel
+        registrar.addMethodCallDelegate(instance, channel: channel)
         var messenger: FlutterBinaryMessenger
         #if os(iOS)
             messenger = registrar.messenger()
@@ -154,4 +159,11 @@ public class SwiftReactiveBlePlugin: NSObject, FlutterPlugin {
     public func handle(_ call: FlutterMethodCall, result completion: @escaping FlutterResult) {
         methodHandler.handle(in: context, call, completion: completion)
     }
+
+    private let delegate = CentralManagerDelegate(
+        methodChannel: methodChannel,
+        onStateChange: ...,
+        onDiscovery: ...,
+        onConnectionChange: ...
+    )
 }
