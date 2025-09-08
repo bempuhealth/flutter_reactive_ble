@@ -64,6 +64,11 @@ final class CentralManagerDelegate: NSObject, CBCentralManagerDelegate, CBPeriph
             central.scanForPeripherals(withServices: services, options: nil)
         }
 
+// 3. Optionally, notify Dart side via MethodChannel
+    if let registrar = self.registrar {
+        let channel = FlutterMethodChannel(name: "ble_restoration", binaryMessenger: registrar.messenger())
+        channel.invokeMethod("onBleRestored", arguments: nil)
+
         // 3. Optionally, notify Dart side via MethodChannel
         // To notify Dart, you need to pass a reference to a FlutterMethodChannel or registrar into this class.
         // Example:
