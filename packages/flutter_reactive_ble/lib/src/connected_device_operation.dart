@@ -93,7 +93,8 @@ class ConnectedDeviceOperationImpl implements ConnectedDeviceOperation {
           .stopSubscribingToNotifications(characteristic)
           .catchError((Object e) =>
               // ignore: avoid_print
-              print("Error unsubscribing from notifications: $e")),
+              print(
+                  "Ratul Flutter Reactive Ble 9 Sep 2025 2:41 - Error unsubscribing from notifications: $e")),
     );
 
     isDisconnected.then<void>((_) => autosubscribingRepeater.dispose());
