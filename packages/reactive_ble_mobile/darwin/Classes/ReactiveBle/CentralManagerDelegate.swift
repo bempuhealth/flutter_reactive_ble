@@ -23,7 +23,7 @@ final class CentralManagerDelegate: NSObject, CBCentralManagerDelegate, CBPeriph
         onDiscovery: @escaping DiscoveryHandler,
         onConnectionChange: @escaping ConnectionChangeHandler
     ) {
-        self.methodChannel = methodChannel
+        print("This is swift v4 (Sep 9 2:17 AM)!")
         self.onStateChange = onStateChange
         self.onDiscovery = onDiscovery
         self.onConnectionChange = onConnectionChange
