@@ -19,6 +19,12 @@ class FlutterReactiveBle {
 
   factory FlutterReactiveBle() => _sharedInstance;
 
+  FlutterReactiveBle._() {
+    _trackStatus();
+    // Print commit hash or version here
+    print('flutter_reactive_ble version: 5.4.0, commit: Ratul 9 Sep 2:52 AM');
+  }
+
   ///Create a new instance where injected dependencies are used.
   @visibleForTesting
   FlutterReactiveBle.witDependencies({
@@ -35,10 +41,6 @@ class FlutterReactiveBle {
     _debugLogger = debugLogger;
     _initialization = initialization;
     _blePlatform = reactiveBlePlatform;
-    _trackStatus();
-  }
-
-  FlutterReactiveBle._() {
     _trackStatus();
   }
 
@@ -471,7 +473,6 @@ class Service {
 
 /// An instance of this object should not be used after its device has lost its connection.
 class Characteristic {
-  Characteristic._({
     required this.id,
     required String instanceId,
     required this.service,
