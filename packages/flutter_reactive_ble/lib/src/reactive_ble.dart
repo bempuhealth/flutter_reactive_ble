@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter_reactive_ble/src/connected_device_operation.dart';
@@ -41,7 +42,8 @@ class FlutterReactiveBle {
   FlutterReactiveBle._() {
     _trackStatus();
     // Print commit hash or version here
-    print('flutter_reactive_ble version: 5.4.0, commit: Ratul 9 Sep 2:52 AM');
+    print('flutter_reactive_ble version: 5.4.0, commit: Ratul 10 Sep 1:35 AM');
+    log("log flutter_reactive_ble version: 5.4.0, commit: Ratul 10 Sep 1:35 AM");
   }
 
   /// Registry that keeps track of all BLE devices found during a BLE scan.
