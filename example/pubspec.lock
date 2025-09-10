@@ -220,7 +220,7 @@ packages:
       path: "../packages/flutter_reactive_ble"
       relative: true
     source: path
-    version: "5.4.0"
+    version: "5.4.123"
   flutter_test:
     dependency: "direct dev"
     description: flutter

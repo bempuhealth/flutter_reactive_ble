@@ -183,6 +183,8 @@ class FlutterReactiveBle {
     QualifiedCharacteristic characteristic, {
     required List<int> value,
   }) async {
+    print("FlutterReactiveBle: print writeCharacteristicWithResponse called");
+    log("FlutterReactiveBle: log writeCharacteristicWithResponse called");
     await initialize();
     await (await resolveSingle(characteristic))
         .write(value, withResponse: true);
